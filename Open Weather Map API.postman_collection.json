@@ -1,0 +1,210 @@
+{
+	"info": {
+		"_postman_id": "5730a674-6bfd-4886-8ed9-bdde456fbe37",
+		"name": "Open Weather Map API",
+		"description": "Access current weather data for any location including over 200,000 cities\nData is collected from different sources such as global and local weather models, satellites, radars and vast network of weather stations. \n\nEnsure to use your unique appid (api key) to be able to access everything in this collection. Find your API key here : https://home.openweathermap.org/api_keys",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Current weather data",
+			"item": [
+				{
+					"name": "ByCityName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec3fba50-92ca-4022-9aca-55d30e8fb36a",
+								"exec": [
+									"console.log(\"Testing Started\");",
+									"//test1 - Check status is 200",
+									"tests[\"Test 1 - Status code is 200\"] = responseCode.code === 200;",
+									"//test2 - Check content type is present",
+									"tests[\"Test 2 - Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+									"//test3+4 - check content-type header exists and is equal to application/json",
+									"var ContentTypeHeaderExists = postman.getResponseHeader(\"Content-Type\");",
+									"tests[\"Test 3 - Content-Type is application/json\"] = ContentTypeHeaderExists;",
+									"if(ContentTypeHeaderExists)",
+									"{",
+									"    tests[\"Test 4 - Content-Type is application/json\"] = postman.getResponseHeader(\"Content-Type\").has(\"application/json\");",
+									"}",
+									"//test 5 - get response and check the word 'weather' is present",
+									"pm.test(\"Test 5 - Body content matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"weather\");",
+									"});",
+									"",
+									"//test 6 - negative test",
+									"tests[\"Test 6 - Status code is not 404\"] = responseCode.code != 404;",
+									"",
+									"//test 7 - validate that environment is open weather api prod",
+									"pm.test(\"Test 7 - Environment url must be prod\", function () {",
+									"    pm.expect(pm.environment.get(\"url\")).to.equal(\"http://api.openweathermap.org/\");",
+									"});",
+									"",
+									"",
+									"//test 8 - general response checks",
+									"pm.test(\"Test 8 - response should be okay to process\", function () {",
+									"    pm.response.to.not.be.error;",
+									"    pm.response.to.not.have.jsonBody(\"error\");",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"//test 9 - check for cookie id presense",
+									"pm.test(\"Test 9 - Cookie SESSIONID is present\", () => {",
+									"  pm.expect(pm.cookies.has('JSESSIONID')).to.be.false;",
+									"});",
+									"",
+									"//test 10 - response time to be less ",
+									"pm.test(\"Test 10 - Response time is less than 500ms\", () => {",
+									"  pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									"//test 11 - assert for response value type",
+									"const jsonData = pm.response.json();",
+									"pm.test(\"Test 11 - Test data type of the response\", () => {",
+									"  pm.expect(jsonData).to.be.an(\"object\");",
+									"  pm.expect(jsonData.coord).to.be.an(\"object\");",
+									"  pm.expect(jsonData.weather).to.be.an(\"array\");",
+									"  pm.expect(jsonData.base).to.be.a(\"string\");",
+									"});",
+									"",
+									"      ",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9a833c7c-f886-4bdf-890f-cbf958a6fc00",
+								"exec": [
+									"//test4",
+									"//set and get variables through script ",
+									"let urlVar = pm.variables.get(\"url\");",
+									"console.log(\"url value : \"+urlVar);",
+									"pm.variables.set(\"name\",\"Postman\");",
+									"console.log(pm.variables.get(\"name\"));",
+									"",
+									"let globalVar = pm.globals.get(\"url\");",
+									"",
+									"console.log(globalVar);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{url}}/data/2.5/weather?q={{cityName}},uk&APPID={{appid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"weather"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "{{cityName}},uk"
+								},
+								{
+									"key": "APPID",
+									"value": "{{appid}}"
+								}
+							]
+						},
+						"description": "Get weather details by using city name. "
+					},
+					"response": []
+				}
+			],
+			"description": "Get current weather data by various attributes. Ie : CityName, City ID, Geographic co-ordinates, zip code and much more! Have a look at https://openweathermap.org/current for valuable info. \n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f56d9738-7a19-4352-8251-fb81e35f8281",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ea7c76e9-12b8-42ba-9fcd-d417ac5eb61f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "cd95c5d5637c599018fb993fe9474320",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "appid",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "be16d621-0f57-4756-9ce1-be5207cf68b5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "22554b62-f63f-4b2d-86b2-5eb60b9cb653",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "64e45101-17e9-4185-b002-77c7809442dc",
+			"key": "url",
+			"value": "http://api.openweathermap.org"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
